@@ -23,8 +23,15 @@ if (Object.create != 'function') {
 		},
 
 		_default: function() {
+			var self = this,
+				opts;
+
 			this.$win.on('scroll', function() {
-				console.log('scrolling');
+				opts = window.scrollY >= self.elemTop ? window.scrollY + self.settings.margin : self.elemTop;
+
+				self.$elem.stop().animate({
+					"margin-top": opts
+				});
 			});
 		}
 	};
