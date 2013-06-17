@@ -12,6 +12,8 @@ if (Object.create != 'function') {
 
 	var obj = {
 		init: function(options, elem) {
+			var self = this;
+
 			this.elem = elem;
 			this.$elem = $(elem);
 			this.$win = $(window);
@@ -19,20 +21,36 @@ if (Object.create != 'function') {
 
 			this.settings = $.extend({}, $.jScroll.defaults, options);
 
-			this._default();
+			if ( this.settings.effect ) {
+				
+				this.$win.on('scroll', function() {
+					self.effect[self.settings.effect]();
+				});
+
+			} else {
+
+				this.$win.on('scroll', function() {
+					this._default();
+				});
+
+			}
 		},
 
 		_default: function() {
 			var self = this,
 				opts;
 
-			this.$win.on('scroll', function() {
-				opts = window.scrollY >= self.elemTop ? window.scrollY + self.settings.margin : self.elemTop;
+			opts = window.scrollY >= self.elemTop ? window.scrollY + self.settings.margin : self.elemTop;
 
-				self.$elem.stop().animate({
-					"margin-top": opts
-				});
-			});
+			self.$elem.stop().animate({
+				"margin-top": opts
+			}, self.settings.speed, self.settings.easing);
+		}, 
+
+		effect: {
+			punch: function() {
+				console.log('punch');
+			}
 		}
 	};
 
@@ -48,6 +66,7 @@ if (Object.create != 'function') {
 
 	$.jScroll = {
 		defaults: {
+			effect: 0,
 			easing: 'swing',
 			speed: 600,
 			margin: 50
