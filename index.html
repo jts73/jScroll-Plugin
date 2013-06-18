@@ -9,6 +9,10 @@
 </head>
 <body>
 
+<div id="long" class="long">
+	<h1>My Heading</h1>
+</div>
+
 <div class="box">
 	<h1>My Heading</h1>
 	<hr />
@@ -30,7 +34,10 @@
 <script>
 	(function() {
 		$('.box').jScroll({
-			effect: "punch"
+			effect: {
+				name: 'hook',
+				params: $('.long')
+			}
 		});
 	})();
 </script>
