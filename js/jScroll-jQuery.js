@@ -58,7 +58,7 @@ if (Object.create != 'function') {
 			var self = this,
 				opts;
 
-			opts = window.scrollY >= self.elemTop ? window.scrollY + self.settings.margin : self.elemTop;
+			opts = window.pageYOffset >= self.elemTop ? window.pageYOffset + self.settings.margin : self.elemTop;
 
 			self.$elem.stop().animate({
 				"margin-top": opts
@@ -71,31 +71,49 @@ if (Object.create != 'function') {
 				var self = this,
 					fisher = this.$elem,
 					fish = params,
+					fisherHeight = fisher.outerHeight(),
+					hooked,
 					opts;
+
+				console.log(fisherHeight);
 
 				if (!fish.selector) {
 					fish = $(fish);
 				}
 
-				fish.css("display", "none");
+				fish.css({
+					// 'display': 'none',
+					'position': 'fixed',
+					'top': -(fisherHeight),
+					'left': 0
+				});
 
 				function caught() {
-					fisher.stop().hide(self.settings.speed, self.settings.easing, function() {
-						fish.show(self.settings.speed);
-					});
+					if (fish.css('display') === 'none') {
+						fisher.stop().hide(self.settings.speed, self.settings.easing, function() {
+							fish.show();
+							fish.stop().animate({
+								top: 0
+							});
+						});
+					}
 				}
 
 				function release() {
-					fish.stop().hide(self.settings.speed, self.settings.easing, function() {
-						fisher.show(self.settings.speed);
+					fish.stop().animate({
+						top: -(fisherHeight)
+					}, function() {
+						fish.hide();
 					});
+
+					fisher.show(self.settings.speed);
 				}
 				
 
 				this.$win.on('scroll', function() {
-					opts = window.scrollY >= self.elemTop ? true : false;
+					hooked = window.pageYOffset >= self.elemTop ? true : false;
 
-					opts ? caught() : release();
+					hooked ? caught() : release();
 
 				});
 			}

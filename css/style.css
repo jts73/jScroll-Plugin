@@ -25,6 +25,7 @@ body {
 	background-color: #444;
 	border-bottom: 1px solid #4D4D4D;
 	box-shadow: 0px 1px 5px 2px #111;
+	display: none;
 }
 
 .long h1 {
